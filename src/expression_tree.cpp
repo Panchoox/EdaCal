@@ -296,9 +296,29 @@ void ExpressionTree::printTree() const {
         std::cout << "(empty)" << std::endl;
         return;
     }
-    printTreeHelper(root, 0);
+    // Pretty-print the tree using box-drawing characters.
+    // We'll print the root first, then recursively print right and left children
+    // so the visual matches typical tree diagrams.
+    std::function<void(TreeNode*, const std::string&, bool)> recurse;
+    recurse = [&](TreeNode* node, const std::string& prefix, bool isLeft) {
+        if (!node) return;
+        // Print current node
+    std::cout << prefix;
+    std::cout << (isLeft ? "├── " : "└── ");
+        std::cout << node->getValue() << std::endl;
+        // Prepare prefix for children
+        std::string childPrefix = prefix + (isLeft ? "│   " : "    ");
+        // Print left then right to get the same ordering as examples
+        if (node->getLeft()) recurse(node->getLeft(), childPrefix, true);
+        if (node->getRight()) recurse(node->getRight(), childPrefix, false);
+    };
+    // Print root without prefix
+    std::cout << root->getValue() << std::endl;
+    // Left and right children
+    if (root->getLeft()) recurse(root->getLeft(), std::string(), true);
+    if (root->getRight()) recurse(root->getRight(), std::string(), false);
 }
-
+// keep printTreeHelper for compatibility but delegate to pretty printer if needed
 void ExpressionTree::printTreeHelper(TreeNode* node, int depth) const {
     if (!node) return;
     for (int i = 0; i < depth; ++i) std::cout << "  ";
