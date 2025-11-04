@@ -52,15 +52,10 @@ void TreeNode::setRight(TreeNode* right) {
 // ========== ExpressionTree Implementation ==========
 
 // Constructor por defecto
-ExpressionTree::ExpressionTree() : root(nullptr) {
-    // TODO: Implementar
-}
+ExpressionTree::ExpressionTree() : root(nullptr) {}
 
 // Destructor
-ExpressionTree::~ExpressionTree() {
-    // TODO: Implementar
-    clear();
-}
+ExpressionTree::~ExpressionTree() {}
 
 // Construir árbol desde expresión en notación postfija
 void ExpressionTree::buildFromPostfix(const std::string& expression) {

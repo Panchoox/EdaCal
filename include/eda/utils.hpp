@@ -13,6 +13,16 @@ namespace eda {
  */
 class Utils {
 public:
+    // Evaluar una expresión en notación posfija
+    static double evaluatePostfix(const std::vector<std::string>& postfix);
+    // Tokenizar una expresión en una lista de strings (números, operadores, paréntesis, variables)
+    static std::vector<std::string> tokenize(const std::string& expr);
+
+    // Obtener la precedencia de un operador
+    static int precedence(char op);
+
+    // Convertir una expresión tokenizada de infijo a posfijo (Shunting Yard)
+    static std::vector<std::string> toPostfix(const std::vector<std::string>& tokens);
     // Eliminar espacios en blanco de una cadena
     static std::string trim(const std::string& str);
     

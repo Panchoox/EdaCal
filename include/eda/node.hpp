@@ -1,3 +1,10 @@
+#include <cstddef>
+
+// Declaración adelantada de LinkedList
+namespace eda {
+template <typename T>
+class LinkedList;
+}
 #pragma once
 
 #include <memory>
@@ -15,6 +22,8 @@ namespace eda {
  */
 template <typename T>
 class Node {
+    friend class LinkedList<T>;
+    friend class LinkedList<T>;
 public:
     // Constructor por defecto
     Node();
