@@ -21,37 +21,31 @@ TreeNode::~TreeNode() {
 
 // Obtener el valor del nodo
 std::string TreeNode::getValue() const {
-    // TODO: Implementar
     return value;
 }
 
 // Establecer el valor del nodo
 void TreeNode::setValue(const std::string& value) {
-    // TODO: Implementar
     this->value = value;
 }
 
 // Obtener hijo izquierdo
 TreeNode* TreeNode::getLeft() const {
-    // TODO: Implementar
     return left;
 }
 
 // Establecer hijo izquierdo
 void TreeNode::setLeft(TreeNode* left) {
-    // TODO: Implementar
     this->left = left;
 }
 
 // Obtener hijo derecho
 TreeNode* TreeNode::getRight() const {
-    // TODO: Implementar
     return right;
 }
 
 // Establecer hijo derecho
 void TreeNode::setRight(TreeNode* right) {
-    // TODO: Implementar
     this->right = right;
 }
 
@@ -109,7 +103,6 @@ std::string ExpressionTree::toPostfix() const {
 
 // Verificar si el árbol está vacío
 bool ExpressionTree::isEmpty() const {
-    // TODO: Implementar
     return root == nullptr;
 }
 
