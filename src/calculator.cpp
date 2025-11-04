@@ -1,68 +1,156 @@
 #include "eda/calculator.hpp"
-#include <sstream>
+#include "eda/utils.hpp"
+#include "eda/stack.hpp"
 #include <iostream>
+#include <algorithm>
+#include <cmath>
+#include <sstream>
 
 namespace eda {
 
 // Constructor por defecto
 Calculator::Calculator() : tree() {
-    // Constructor vacío: no es necesario inicializar aquí variables del prompt
+    // TODO: Implementar
 }
 
 // Destructor
 Calculator::~Calculator() {
-    // Nada que limpiar explícitamente aquí
+    // TODO: Implementar limpieza si es necesaria
 }
 
 // Evaluar expresión en notación infija
 double Calculator::evaluateInfix(const std::string& expression) {
-    // Mantener como TODO: la conversión/evaluación infija->postfija es
-    // responsabilidad de Persona A según la distribución.
-    return 0.0;
+    // 1. Tokenizar
+    auto tokens = Utils::tokenize(expression);
+    auto postfix = Utils::toPostfix(tokens);
+    return Utils::evaluatePostfix(postfix);
 }
 
 // Evaluar expresión en notación postfija
 double Calculator::evaluatePostfix(const std::string& expression) {
-    // TODO: Implementar (Persona A)
-    return 0.0;
+    auto tokens = Utils::tokenize(expression);
+    return Utils::evaluatePostfix(tokens);
 }
 
-// Evaluar expresión en notación prefija (esencial Persona B)
+// Evaluar expresión en notación prefija
 double Calculator::evaluatePrefix(const std::string& expression) {
-    tree.clear();
-    tree.buildFromPrefix(expression);
-    return tree.evaluate();
+    // Evaluar expresión prefija usando pila (de derecha a izquierda)
+    auto tokens = Utils::tokenize(expression);
+    std::reverse(tokens.begin(), tokens.end());
+    Stack<double> stack;
+    for (const auto& token : tokens) {
+        if (Utils::isNumber(token)) {
+            stack.push(Utils::stringToDouble(token));
+        } else if (Utils::isOperator(token[0]) && token.size() == 1) {
+            if (stack.size() < 2) throw std::runtime_error("Expresión inválida");
+            double a = stack.top(); stack.pop();
+            double b = stack.top(); stack.pop();
+            double res = 0;
+            switch (token[0]) {
+                case '+': res = a + b; break;
+                case '-': res = a - b; break;
+                case '*': res = a * b; break;
+                case '/': res = a / b; break;
+                case '^': res = std::pow(a, b); break;
+            }
+            stack.push(res);
+        } else if (token == "sqrt") {
+            if (stack.isEmpty()) throw std::runtime_error("Expresión inválida");
+            double a = stack.top(); stack.pop();
+            stack.push(std::sqrt(a));
+        } else {
+            throw std::runtime_error("Token no soportado en evaluatePrefix: " + token);
+        }
+    }
+    if (stack.size() != 1) throw std::runtime_error("Expresión inválida");
+    return stack.top();
 }
 
 // Convertir de infija a postfija
 std::string Calculator::infixToPostfix(const std::string& expression) {
-    // TODO: Implementar (Persona A)
-    return std::string();
+    auto tokens = Utils::tokenize(expression);
+    auto postfix = Utils::toPostfix(tokens);
+    std::string result;
+    for (const auto& tok : postfix) {
+        if (!result.empty()) result += " ";
+        result += tok;
+    }
+    return result;
 }
 
-// Convertir de infija a prefija (esencial Persona B)
+// Convertir de infija a prefija
 std::string Calculator::infixToPrefix(const std::string& expression) {
-    tree.clear();
-    tree.buildFromInfix(expression);
-    return tree.toPrefix();
+    // Algoritmo: invertir, cambiar paréntesis, infija a postfija, invertir resultado
+    auto tokens = Utils::tokenize(expression);
+    std::reverse(tokens.begin(), tokens.end());
+    for (auto& t : tokens) {
+        if (t == "(") t = ")";
+        else if (t == ")") t = "(";
+    }
+    auto postfix = Utils::toPostfix(tokens);
+    std::reverse(postfix.begin(), postfix.end());
+    std::string result;
+    for (const auto& tok : postfix) {
+        if (!result.empty()) result += " ";
+        result += tok;
+    }
+    return result;
 }
 
-// Convertir de postfija a infija (esencial Persona B)
+// Convertir de postfija a infija
 std::string Calculator::postfixToInfix(const std::string& expression) {
-    tree.clear();
-    tree.buildFromPostfix(expression);
-    return tree.toInfix();
+    // Usar pila para reconstruir la expresión infija
+    auto tokens = Utils::tokenize(expression);
+    Stack<std::string> stack;
+    for (const auto& token : tokens) {
+        if (Utils::isNumber(token)) {
+            stack.push(token);
+        } else if (Utils::isOperator(token[0]) && token.size() == 1) {
+            if (stack.size() < 2) throw std::runtime_error("Expresión inválida");
+            std::string b = stack.top(); stack.pop();
+            std::string a = stack.top(); stack.pop();
+            stack.push("(" + a + " " + token + " " + b + ")");
+        } else if (token == "sqrt") {
+            if (stack.isEmpty()) throw std::runtime_error("Expresión inválida");
+            std::string a = stack.top(); stack.pop();
+            stack.push("sqrt(" + a + ")");
+        } else {
+            throw std::runtime_error("Token no soportado en postfixToInfix: " + token);
+        }
+    }
+    if (stack.size() != 1) throw std::runtime_error("Expresión inválida");
+    return stack.top();
 }
 
-// Convertir de prefija a infija (esencial Persona B)
+// Convertir de prefija a infija
 std::string Calculator::prefixToInfix(const std::string& expression) {
-    tree.clear();
-    tree.buildFromPrefix(expression);
-    return tree.toInfix();
+    // Usar pila para reconstruir la expresión infija desde prefija (de derecha a izquierda)
+    auto tokens = Utils::tokenize(expression);
+    std::reverse(tokens.begin(), tokens.end());
+    Stack<std::string> stack;
+    for (const auto& token : tokens) {
+        if (Utils::isNumber(token)) {
+            stack.push(token);
+        } else if (Utils::isOperator(token[0]) && token.size() == 1) {
+            if (stack.size() < 2) throw std::runtime_error("Expresión inválida");
+            std::string a = stack.top(); stack.pop();
+            std::string b = stack.top(); stack.pop();
+            stack.push("(" + a + " " + token + " " + b + ")");
+        } else if (token == "sqrt") {
+            if (stack.isEmpty()) throw std::runtime_error("Expresión inválida");
+            std::string a = stack.top(); stack.pop();
+            stack.push("sqrt(" + a + ")");
+        } else {
+            throw std::runtime_error("Token no soportado en prefixToInfix: " + token);
+        }
+    }
+    if (stack.size() != 1) throw std::runtime_error("Expresión inválida");
+    return stack.top();
 }
 
-// Verificar si una expresión es válida (esencial Persona B)
+// Verificar si una expresión es válida
 bool Calculator::isValidExpression(const std::string& expression) {
+    // Verificar balance de paréntesis y tokens mínimos
     int balance = 0;
     std::istringstream iss(expression);
     std::string token;
@@ -76,7 +164,8 @@ bool Calculator::isValidExpression(const std::string& expression) {
     return any && (balance == 0);
 }
 
-// Métodos auxiliares privados (esenciales Persona B)
+// Métodos auxiliares privados
+
 int Calculator::getPrecedence(char op) const {
     if (op == '^') return 4;
     if (op == '*' || op == '/') return 3;
@@ -93,4 +182,3 @@ bool Calculator::isOperand(char c) const {
 }
 
 } // namespace eda
-
