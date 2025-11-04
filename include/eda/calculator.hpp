@@ -3,6 +3,8 @@
 #include "expression_tree.hpp"
 #include "stack.hpp"
 #include <string>
+#include <map>
+#include <iostream>
 
 namespace eda {
 
@@ -43,6 +45,7 @@ public:
     
     // Verificar si una expresión es válida
     bool isValidExpression(const std::string& expression);
+
 
 private:
     ExpressionTree tree;  // Árbol de expresiones interno

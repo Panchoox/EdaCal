@@ -85,6 +85,8 @@ public:
     
     // Limpiar el árbol
     void clear();
+         void printTree() const;
+         void printTreeHelper(TreeNode* node, int depth) const;
 
 private:
     TreeNode* root;      // Raíz del árbol
