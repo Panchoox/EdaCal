@@ -5,7 +5,6 @@
 #include <sstream>
 #include <map>
 
-// Prompt interactivo estilo terminal
 static std::string replaceVariables(const std::string& expr, const std::map<std::string,double>& vars) {
     std::istringstream iss(expr);
     std::ostringstream oss;
@@ -76,8 +75,6 @@ void runPrompt(eda::Calculator &calculator) {
             std::string exprSub = replaceVariables(expr, variables);
                 try {
                 double res = calculator.evaluateInfix(exprSub);
-                // Store into the named variable. Do not overwrite 'ans' on assignment
-                // unless the user explicitly assigns to 'ans'.
                 variables[name] = res;
                 if (name == "ans") variables["ans"] = res;
                 std::string post = calculator.infixToPostfix(exprSub);
@@ -87,7 +84,6 @@ void runPrompt(eda::Calculator &calculator) {
             continue;
         }
 
-        // Evaluación pura
         {
             std::string exprSub = replaceVariables(cmd, variables);
             try {

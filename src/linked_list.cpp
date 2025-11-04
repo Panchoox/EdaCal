@@ -4,11 +4,9 @@
 
 namespace eda {
 
-// Constructor por defecto
 template <typename T>
 LinkedList<T>::LinkedList() : head(nullptr), tail(nullptr), count(0) {}
 
-// Constructor de copia
 template <typename T>
 LinkedList<T>::LinkedList(const LinkedList& other) : head(nullptr), tail(nullptr), count(0) {
     Node<T>* curr = other.head;
@@ -18,7 +16,6 @@ LinkedList<T>::LinkedList(const LinkedList& other) : head(nullptr), tail(nullptr
     }
 }
 
-// Operador de asignación
 template <typename T>
 LinkedList<T>& LinkedList<T>::operator=(const LinkedList& other) {
     if (this != &other) {
@@ -32,13 +29,11 @@ LinkedList<T>& LinkedList<T>::operator=(const LinkedList& other) {
     return *this;
 }
 
-// Destructor
 template <typename T>
 LinkedList<T>::~LinkedList() {
     clear();
 }
 
-// Insertar un elemento al inicio
 template <typename T>
 void LinkedList<T>::pushFront(const T& value) {
     Node<T>* newNode = new Node<T>(value);
@@ -48,7 +43,6 @@ void LinkedList<T>::pushFront(const T& value) {
     ++count;
 }
 
-// Insertar un elemento al final
 template <typename T>
 void LinkedList<T>::pushBack(const T& value) {
     Node<T>* newNode = new Node<T>(value);
@@ -61,7 +55,6 @@ void LinkedList<T>::pushBack(const T& value) {
     ++count;
 }
 
-// Eliminar el elemento al inicio
 template <typename T>
 void LinkedList<T>::popFront() {
     if (!head) return;
@@ -72,7 +65,6 @@ void LinkedList<T>::popFront() {
     if (!head) tail = nullptr;
 }
 
-// Eliminar el elemento al final
 template <typename T>
 void LinkedList<T>::popBack() {
     if (!head) return;
@@ -89,33 +81,28 @@ void LinkedList<T>::popBack() {
     --count;
 }
 
-// Obtener el elemento al inicio
 template <typename T>
 T LinkedList<T>::front() const {
     if (!head) throw std::runtime_error("Lista vacía");
     return head->data;
 }
 
-// Obtener el elemento al final
 template <typename T>
 T LinkedList<T>::back() const {
     if (!tail) throw std::runtime_error("Lista vacía");
     return tail->data;
 }
 
-// Verificar si la lista está vacía
 template <typename T>
 bool LinkedList<T>::isEmpty() const {
     return head == nullptr;
 }
 
-// Obtener el tamaño de la lista
 template <typename T>
 std::size_t LinkedList<T>::size() const {
     return count;
 }
 
-// Limpiar la lista
 template <typename T>
 void LinkedList<T>::clear() {
     while (head) {
@@ -127,7 +114,6 @@ void LinkedList<T>::clear() {
     count = 0;
 }
 
-// Instanciación explícita de templates comunes
 template class LinkedList<int>;
 template class LinkedList<double>;
 template class LinkedList<char>;

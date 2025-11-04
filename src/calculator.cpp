@@ -8,33 +8,24 @@
 
 namespace eda {
 
-// Constructor por defecto
 Calculator::Calculator() : tree() {
-    // TODO: Implementar
 }
 
-// Destructor
 Calculator::~Calculator() {
-    // TODO: Implementar limpieza si es necesaria
 }
 
-// Evaluar expresión en notación infija
 double Calculator::evaluateInfix(const std::string& expression) {
-    // 1. Tokenizar
     auto tokens = Utils::tokenize(expression);
     auto postfix = Utils::toPostfix(tokens);
     return Utils::evaluatePostfix(postfix);
 }
 
-// Evaluar expresión en notación postfija
 double Calculator::evaluatePostfix(const std::string& expression) {
     auto tokens = Utils::tokenize(expression);
     return Utils::evaluatePostfix(tokens);
 }
 
-// Evaluar expresión en notación prefija
 double Calculator::evaluatePrefix(const std::string& expression) {
-    // Evaluar expresión prefija usando pila (de derecha a izquierda)
     auto tokens = Utils::tokenize(expression);
     std::reverse(tokens.begin(), tokens.end());
     Stack<double> stack;
@@ -66,7 +57,6 @@ double Calculator::evaluatePrefix(const std::string& expression) {
     return stack.top();
 }
 
-// Convertir de infija a postfija
 std::string Calculator::infixToPostfix(const std::string& expression) {
     auto tokens = Utils::tokenize(expression);
     auto postfix = Utils::toPostfix(tokens);
@@ -78,9 +68,7 @@ std::string Calculator::infixToPostfix(const std::string& expression) {
     return result;
 }
 
-// Convertir de infija a prefija
 std::string Calculator::infixToPrefix(const std::string& expression) {
-    // Algoritmo: invertir, cambiar paréntesis, infija a postfija, invertir resultado
     auto tokens = Utils::tokenize(expression);
     std::reverse(tokens.begin(), tokens.end());
     for (auto& t : tokens) {
@@ -97,9 +85,7 @@ std::string Calculator::infixToPrefix(const std::string& expression) {
     return result;
 }
 
-// Convertir de postfija a infija
 std::string Calculator::postfixToInfix(const std::string& expression) {
-    // Usar pila para reconstruir la expresión infija
     auto tokens = Utils::tokenize(expression);
     Stack<std::string> stack;
     for (const auto& token : tokens) {
@@ -122,9 +108,7 @@ std::string Calculator::postfixToInfix(const std::string& expression) {
     return stack.top();
 }
 
-// Convertir de prefija a infija
 std::string Calculator::prefixToInfix(const std::string& expression) {
-    // Usar pila para reconstruir la expresión infija desde prefija (de derecha a izquierda)
     auto tokens = Utils::tokenize(expression);
     std::reverse(tokens.begin(), tokens.end());
     Stack<std::string> stack;
@@ -148,9 +132,7 @@ std::string Calculator::prefixToInfix(const std::string& expression) {
     return stack.top();
 }
 
-// Verificar si una expresión es válida
 bool Calculator::isValidExpression(const std::string& expression) {
-    // Verificar balance de paréntesis y tokens mínimos
     int balance = 0;
     std::istringstream iss(expression);
     std::string token;
@@ -164,7 +146,6 @@ bool Calculator::isValidExpression(const std::string& expression) {
     return any && (balance == 0);
 }
 
-// Métodos auxiliares privados
 
 int Calculator::getPrecedence(char op) const {
     if (op == '^') return 4;
